@@ -12,22 +12,19 @@ $(document).ready(function() {
     window.objList = list;
     // console.log(objList);
     var tbody = $("<tbody><tbody>");
+    // var option = $("<option></option>");
 
-		//Iterare across each JSON oject
-		$.each(objList, function(i){
-			//Create seperate row data for each object
-			var obj = objList[i];
-			var trow = $("<tr></tr>");
+		//Iterare across each JSON oject & create objList[i] via function(i, obj)
+		$.each(objList, function(i, obj) {
+      var trow = $("<tr></tr>");
 			//Create object for each prototype
       var protoObj = {};
-      // console.log(obj);
 			protoObj.name = obj.name;
       protoObj.description = obj.description;
 
       //Append Lat/Long to clickable link
 			var link = $('<a class="button is-danger" target="blank"> Open in Google Maps</a>');
-			var googleMaps = "https://www.google.com/maps?q=";
-			googleMaps += obj.location[0] + "," + obj.location[1];
+			var googleMaps = "https://www.google.com/maps?q=" + obj.location[0] + "," + obj.location[1];
 			// add link to anchor tag
 			link.attr("href", googleMaps);
 			// attach link to prototype
@@ -40,15 +37,22 @@ $(document).ready(function() {
         tdata.appendTo(trow);
 			});
 			//Append entire itteration into table rows
-			tbody.append(trow);
+      tbody.append(trow);
+
+      var $option = $('<option></option>');
+      $option.text(obj.noun);
+      $option.val(obj.location)
+
+      $('#destination').append($option);
+
 		//Callback closure
-		});
+    });
 		//Build body
     $("thead").after(tbody);
 
     setMarkers(objList);
   });
-  //Build markers and infoWindow
+  //Google Maps Build markers and infoWindow
   function setMarkers(){
     for (var i = 0; i < objList.length; i++){
       var marks = objList[i];
@@ -68,18 +72,17 @@ $(document).ready(function() {
       var marker = new google.maps.Marker({
         position: {lat: marks.location[0], lng: marks.location[1]},
         map: map,
-        title: marks.name
+        title: marks.name,
+        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
       });
-
       google.maps.event.addListener(marker, 'click', (function(marker, i){
         return function(){
           // infowindow.setContent();
         infowindow.open(map, marker);
+        console.log("clicked");
         }
       })(marker, i));
-
     }
-
   }
 
 });
@@ -89,3 +92,34 @@ $(document).ready(function() {
 // Using the current location, get directions for the user to get to the location
 // Display the distance to each location from users current location on the row in the table
 // Sort the top spots based on distance from users current location
+
+      // ------Unused Code------//
+      // Populate the select element with the data found in the protoLatLng array.
+      // var selectDiv = document.getElementById("destination");
+      // //Add options to select
+      // window.protoLatLng = {};
+      // $.each(protoLatLng, function(){
+      //     var option = $("<option></option>");
+      //     var optionDiv = $('#des-options');
+      //     option.append(protoLatLng.name);
+      //     option.attr("value", protoLatLng.location);
+      //     $('#des-options').append(option.join(''));
+      //     option.appendTo(optionDiv);
+      //   });
+
+      // faster method of iterating than the above
+      // var arr = protoLatLng;
+      // var insert = [];
+      // var i = 0;
+      // $.each(arr, function(count, content){
+      //   insert[i++] = '<option>';
+      //   insert[i++] = protoLatLng.name;
+      //   insert[i++] = content;
+      //   insert[i++] = '</option>';
+      //   insert.attr("value", protoLatLng.location);
+      // });
+      // insert.attr("value", protoLatLng.location);
+      // $('#destination').append(insert.join(''));
+
+
+
