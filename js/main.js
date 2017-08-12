@@ -11,12 +11,11 @@ $(document).ready(function() {
 		//Retrive JSON array list -- Use "window" to create global var
     window.objList = list;
     // console.log(objList);
-    var tbody = $("<tbody><tbody>");
-    // var option = $("<option></option>");
+    var tbody = $("<tbody></tbody>");
 
-		//Iterare across each JSON oject & create objList[i] via function(i, obj)
+		//Iterare across each JSON oject & create var obj = objList[i] via function(i, obj)
 		$.each(objList, function(i, obj) {
-      var trow = $("<tr></tr>");
+      var trow = $('<tr></tr>');
 			//Create object for each prototype
       var protoObj = {};
 			protoObj.name = obj.name;
@@ -39,15 +38,15 @@ $(document).ready(function() {
 			//Append entire itteration into table rows
       tbody.append(trow);
 
+      //Create select Options
       var $option = $('<option></option>');
       $option.text(obj.noun);
-      $option.val(obj.location)
-
+      $option.val(obj.location);
       $('#destination').append($option);
 
 		//Callback closure
     });
-		//Build body
+    //Build body
     $("thead").after(tbody);
 
     setMarkers(objList);
